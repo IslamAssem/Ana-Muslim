@@ -15,8 +15,6 @@ public class Player implements OnAudioFocusChangeListener, MediaPlayer.OnPrepare
     private int audioFocusState;
     private String lastPlayed;
     private static Player player;
-    public static final int PLAYING=1;
-    public static final int STOPPED=-1;
     private onPlayerStatusChanged onPlayerStatusChanged;
     private Player(Context context)
     {
@@ -34,39 +32,35 @@ public class Player implements OnAudioFocusChangeListener, MediaPlayer.OnPrepare
     }
 
     public boolean isPlaying() {
-        return IsPlaying;
-    }
-
-    public boolean isStopped() {
-        return IsStopped;
+        if(mediaPlayer!=null)
+        return mediaPlayer.isPlaying();
+        else return false;
     }
 
     public void setOnPlayerStatusChanged(Player.onPlayerStatusChanged onPlayerStatusChanged) {
         this.onPlayerStatusChanged = onPlayerStatusChanged;
     }
 
-    public boolean playChannel(String url) {
+    public void playChannel(String url) {
 
         try {
             lastPlayed=url;
             release();
             audioFocusState=audioManager.requestAudioFocus(this,STREAM_MUSIC,AUDIOFOCUS_GAIN);
             if(audioFocusState==AUDIOFOCUS_REQUEST_FAILED)
-                return false;
+                return;
             if(audioFocusState==AUDIOFOCUS_REQUEST_DELAYED)
                 //TODO handle delayed focus //ask eng mohamed nabil if lost
-                return false;
+                return;
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(this);
-            return true;
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
-        return false;
     }
-    public void resume()
+    private void resume()
     {
         try
         {
@@ -121,7 +115,7 @@ public class Player implements OnAudioFocusChangeListener, MediaPlayer.OnPrepare
         }
     }
 
-    public void release()
+    private void release()
     {
         try
         {
@@ -171,7 +165,7 @@ public class Player implements OnAudioFocusChangeListener, MediaPlayer.OnPrepare
         IsPlaying = true;
         IsStopped=false;
         if(onPlayerStatusChanged!=null)
-            onPlayerStatusChanged.onChange(IsPlaying);
+            onPlayerStatusChanged.onChange(true);
     }
     public interface onPlayerStatusChanged
     {

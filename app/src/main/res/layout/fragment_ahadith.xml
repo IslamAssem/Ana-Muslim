@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/suarbackground_solo"
-    android:backgroundTintMode="multiply"
     tools:context="com.eltendawy.anamuslim.Fragment.Ahadith">
 
     <android.support.v7.widget.RecyclerView
